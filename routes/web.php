@@ -10,10 +10,17 @@ Route::get('/login', function () {
     return Inertia::render('auth/login'); 
 })->name('login');
 
-// Route untuk home/dashboard
-Route::get('/', function() {
+Route::get('/dashboard', function() {
     return Inertia::render('index');
-});
+})->name('dashboard');
+
+Route::get('/second-page', function() {
+    return Inertia::render('second-page');
+})->name('second-page');
+
+Route::get('/third-page', function() {
+    return Inertia::render('third-page');
+})->name('third-page');
 
 // Route Fallback (Opsional, untuk menangani 404)
 Route::fallback(function () {
