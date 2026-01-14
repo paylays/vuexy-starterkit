@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/vue3'
 import { AppContentLayoutNav, NavbarType } from '@layouts/enums'
 import { injectionKeyIsVerticalNavHovered } from '@layouts/symbols'
 import { _setDirAttr } from '@layouts/utils'
@@ -10,7 +11,7 @@ export const cookieRef = (key, defaultValue) => {
   return useCookie(namespaceConfig(key), { default: () => defaultValue })
 }
 export const useLayoutConfigStore = defineStore('layoutConfig', () => {
-  const route = useRoute()
+  const page = usePage()
 
   // 👉 Navbar Type
   const navbarType = ref(layoutConfig.navbar.type)
@@ -68,7 +69,7 @@ export const useLayoutConfigStore = defineStore('layoutConfig', () => {
   // 👉 Layout Classes
   const _layoutClasses = computed(() => {
     const { y: windowScrollY } = useWindowScroll()
-    
+    const layoutWrapperClasses = page.props.layoutWrapperClasses || null // from Inertia page props
     return [
       `layout-nav-type-${appContentLayoutNav.value}`,
       `layout-navbar-${navbarType.value}`,
@@ -82,7 +83,7 @@ export const useLayoutConfigStore = defineStore('layoutConfig', () => {
       `layout-content-width-${appContentWidth.value}`,
       { 'layout-overlay-nav': isLessThanOverlayNavBreakpoint.value },
       { 'window-scrolled': unref(windowScrollY) },
-      route.meta.layoutWrapperClasses ? route.meta.layoutWrapperClasses : null,
+      layoutWrapperClasses
     ]
   })
 

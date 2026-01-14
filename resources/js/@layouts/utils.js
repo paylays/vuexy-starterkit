@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/vue3'
 import { layoutConfig } from '@layouts/config'
 import { AppContentLayoutNav } from '@layouts/enums'
 import { useLayoutConfigStore } from '@layouts/stores/config'
@@ -31,31 +32,32 @@ export const getComputedNavLinkToProp = computed(() => link => {
  * IF link is object it will resolve the object and will return the link
  // @param {Object, String} link navigation link object/string
  */
-export const resolveNavLinkRouteName = (link, router) => {
+export const resolveNavLinkRouteName = (link  ) => {
   if (!link.to)
     return null
   if (typeof link.to === 'string')
     return link.to
   
-  return router.resolve(link.to).name
+  return link.to.name || null
 }
 
 /**
  * Check if nav-link is active
  * @param {object} link nav-link object
  */
-export const isNavLinkActive = (link, router) => {
-  // Matched routes array of current route
-  const matchedRoutes = router.currentRoute.value.matched
-
-  // Check if provided route matches route's matched route
-  const resolveRoutedName = resolveNavLinkRouteName(link, router)
-  if (!resolveRoutedName)
-    return false
+export const isNavLinkActive = (link) => {
+  const page = usePage()
+  const currentComponent = page.component // Nama komponen Inertia saat ini (misal: 'index')
   
-  return matchedRoutes.some(route => {
-    return route.name === resolveRoutedName || route.meta.navActiveLink === resolveRoutedName
-  })
+  // Jika link tidak punya 'to', berarti external link
+  if (!link.to) return false
+  
+  // Dapatkan nama route yang dituju
+  const targetRoute = resolveNavLinkRouteName(link)
+  if (!targetRoute) return false
+  
+  // Cocokkan dengan komponen Inertia aktif
+  return currentComponent === targetRoute
 }
 
 /**

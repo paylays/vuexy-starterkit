@@ -1,6 +1,5 @@
 <script setup>
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { VNodeRenderer } from './VNodeRenderer'
+import { Link, usePage } from '@inertiajs/vue3'
 import { layoutConfig } from '@layouts'
 import {
   VerticalNavGroup,
@@ -9,6 +8,8 @@ import {
 } from '@layouts/components'
 import { useLayoutConfigStore } from '@layouts/stores/config'
 import { injectionKeyIsVerticalNavHovered } from '@layouts/symbols'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { VNodeRenderer } from './VNodeRenderer'
 
 const props = defineProps({
   tag: {
@@ -49,9 +50,9 @@ const resolveNavItemComponent = item => {
 /*ℹ️ Close overlay side when route is changed
 Close overlay vertical nav when link is clicked
 */
-const route = useRoute()
+const page = usePage()
 
-watch(() => route.name, () => {
+watch(() => page.url, () => {
   props.toggleIsOverlayNavActive(false)
 })
 
@@ -83,8 +84,8 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
     <!-- 👉 Header -->
     <div class="nav-header">
       <slot name="nav-header">
-        <RouterLink
-          to="/"
+        <Link
+          href="/"
           class="app-logo app-title-wrapper"
         >
           <VNodeRenderer :nodes="layoutConfig.app.logo" />
@@ -97,7 +98,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
               {{ layoutConfig.app.title }}
             </h1>
           </Transition>
-        </RouterLink>
+        </Link>
         <!-- 👉 Vertical nav actions -->
         <!-- Show toggle collapsible in >md and close button in <md -->
         <div class="header-action">
