@@ -1,13 +1,9 @@
-import laravel from 'laravel-vite-plugin'
-import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import AutoImport from 'unplugin-auto-import/vite'
+import laravel from 'laravel-vite-plugin'
+import { fileURLToPath } from 'node:url'
 import Components from 'unplugin-vue-components/vite'
-import { VueRouterAutoImports, getPascalCaseRouteName } from 'unplugin-vue-router'
-import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
-import VueDevTools from 'vite-plugin-vue-devtools'
 import MetaLayouts from 'vite-plugin-vue-meta-layouts'
 import vuetify from 'vite-plugin-vuetify'
 import svgLoader from 'vite-svg-loader'
@@ -16,16 +12,6 @@ import svgLoader from 'vite-svg-loader'
 export default defineConfig({
   plugins: [// Docs: https://github.com/posva/unplugin-vue-router
   // ℹ️ This plugin should be placed before vue plugin
-    VueRouter({
-      getRouteName: routeNode => {
-      // Convert pascal case to kebab case
-        return getPascalCaseRouteName(routeNode)
-          .replace(/([a-z\d])([A-Z])/g, '$1-$2')
-          .toLowerCase()
-      },
-
-      routesFolder: 'resources/js/pages',
-    }),
     vue({
       template: {
         compilerOptions: {
@@ -62,24 +48,6 @@ export default defineConfig({
             return { name: 'default', from: 'vue3-apexcharts', as: 'VueApexCharts' }
         },
       ],
-    }), // Docs: https://github.com/antfu/unplugin-auto-import#unplugin-auto-import
-    AutoImport({
-      imports: ['vue', VueRouterAutoImports, '@vueuse/core', '@vueuse/math', 'vue-i18n', 'pinia'],
-      dirs: [
-        './resources/js/@core/utils',
-        './resources/js/@core/composable/',
-        './resources/js/composables/',
-        './resources/js/utils/',
-        './resources/js/plugins/*/composables/*',
-      ],
-      vueTemplate: true,
-
-      // ℹ️ Disabled to avoid confusion & accidental usage
-      ignore: ['useCookies', 'useStorage'],
-      eslintrc: {
-        enabled: true,
-        filepath: './.eslintrc-auto-import.json',
-      },
     }),
     svgLoader(),
   ],
