@@ -2,7 +2,9 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import laravel from 'laravel-vite-plugin'
 import { fileURLToPath } from 'node:url'
+import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+import { VueRouterAutoImports } from 'unplugin-vue-router'
 import { defineConfig } from 'vite'
 import MetaLayouts from 'vite-plugin-vue-meta-layouts'
 import vuetify from 'vite-plugin-vuetify'
@@ -48,6 +50,24 @@ export default defineConfig({
             return { name: 'default', from: 'vue3-apexcharts', as: 'VueApexCharts' }
         },
       ],
+    }), // Docs: https://github.com/antfu/unplugin-auto-import#unplugin-auto-import
+    AutoImport({
+      imports: ['vue', VueRouterAutoImports, '@vueuse/core', '@vueuse/math', 'vue-i18n', 'pinia'],
+      dirs: [
+        './resources/js/@core/utils',
+        './resources/js/@core/composable/',
+        './resources/js/composables/',
+        './resources/js/utils/',
+        './resources/js/plugins/*/composables/*',
+      ],
+      vueTemplate: true,
+
+      // ℹ️ Disabled to avoid confusion & accidental usage
+      ignore: ['useCookies', 'useStorage'],
+      eslintrc: {
+        enabled: true,
+        filepath: './.eslintrc-auto-import.json',
+      },
     }),
     svgLoader(),
   ],
